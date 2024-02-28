@@ -28,6 +28,7 @@ func main() {
 
 	fmt.Println("START collect data")
 	var wg sync.WaitGroup
+	var locker sync.Mutex
 	for _, address := range addresses {
 		wg.Add(1)
 		go func(address string) {
@@ -48,7 +49,9 @@ func main() {
 				panic(err)
 			}
 
+			locker.Lock()
 			profiles = append(profiles, p)
+			locker.Unlock()
 		}(address)
 	}
 
